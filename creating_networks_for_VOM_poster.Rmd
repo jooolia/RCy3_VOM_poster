@@ -1,0 +1,169 @@
+---
+title: "Co-occurence network visualisation using RCy3 and Cytoscape"
+author: "Julia Gustavsen"
+date: "July 17th 2016"
+output: 
+    html_document:
+      keep_md: true
+      number_sections: yes
+      theme: cerulean
+      toc: yes
+      toc_depth: 6 
+---
+
+# Get set up
+```{r, message=FALSE}
+library(RCy3)
+library(RColorBrewer)
+```
+
+
+```{r}
+cy <- CytoscapeConnection()
+```
+
+# Send network to Cytoscape
+
+```{r}
+load(file = "./data/network.gpl", verbose = TRUE)
+cw <- CytoscapeWindow("Tara oceans",
+                      graph = ug,
+                      overwriteWindow = TRUE)
+displayGraph(cw)
+layoutNetwork(cw)
+```
+
+Show network first
+
+```{r}
+saveImage(cw,
+          "co-occur0",
+          "png",
+          scale=1)
+
+saveImage(cw,
+          "co-occur0",
+          "pdf",
+          scale=1)
+```
+
+![](./co-occur0.png)
+
+Colour network
+```{r}
+
+
+families_to_colour <- unlist(unique(nodeData(ug, attr="prok_tax_phylum")))
+families_to_colour <- families_to_colour[!families_to_colour %in% "test"]
+node.colour <- brewer.pal(length(families_to_colour),
+                          "Set3")
+setNodeColorRule(cw,
+                 'prok_tax_phylum',
+                 families_to_colour,
+                 node.colour,
+                 "lookup",
+                 default.color='#ffffff')
+
+displayGraph(cw)
+```
+
+
+Show network first
+
+```{r}
+saveImage(cw,
+          "co-occur0_1",
+          "png",
+          scale=1)
+
+saveImage(cw,
+          "co-occur0_1",
+          "pdf",
+          scale=1)
+```
+
+![](./co-occur0_1.png)
+
+
+```{r}
+
+## set shape to be virus or prok
+shapes_for_nodes <- c('DIAMOND')
+
+## so want to grep for ph
+phage_names <- grep("ph_", nodes(ug), value=TRUE)
+setNodeShapeRule(cw,
+                 "label",
+                 phage_names,
+                 shapes_for_nodes)
+showGraphicsDetails(cw, new.value)
+displayGraph(cw)
+```
+
+
+```{r}
+saveImage(cw,
+          "co-occur1",
+          "png",
+          scale=1)
+
+saveImage(cw,
+          "co-occur1",
+          "pdf",
+          scale=1)
+```
+
+![](./co-occur1.png)
+
+
+colour edges of phage
+```{r}
+setDefaultNodeBorderWidth(cw, 5)
+families_to_colour <- c(" Podoviridae",
+                        " Siphoviridae",
+                        " Myoviridae")
+node.colour <- brewer.pal(length(families_to_colour),
+                          "Dark2")
+setNodeBorderColorRule(cw,
+                 'Tax_subfamily',
+                 families_to_colour,
+                 node.colour,
+                 "lookup", 
+                 default.color = "#FFFFFF")
+displayGraph(cw)
+```
+
+```{r}
+saveImage(cw,
+          "co-occur2",
+          "png",
+          scale=1)
+
+saveImage(cw,
+          "co-occur2",
+          "pdf",
+          scale=1)
+```
+
+![](./co-occur2.png)
+
+Do more layout
+```{r}
+setLayoutProperties(cw, layout.name = 'allegro-spring-electric', list( gravity = 100,
+                                                                     scale = 6))
+layoutNetwork(cw, layout.name = 'allegro-spring-electric')
+```
+
+```{r}
+saveImage(cw,
+          "co-occur3",
+          "png",
+          scale=1)
+
+saveImage(cw,
+          "co-occur3",
+          "pdf",
+          scale=1)
+```
+
+![](./co-occur3.png)
