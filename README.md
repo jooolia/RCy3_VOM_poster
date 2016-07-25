@@ -1,4 +1,4 @@
-# RCy3_VOM_poster
+# RCy3 Viruses of Microbes poster
 Code for poster presented at [Viruses of Microbes](http://http://events.embo.org/16-virus-microbe/) meeting July 18th-22nd in Liverpool UK.
 
 ## To install software to run the code in this repository:
